@@ -3,17 +3,17 @@ package com.pong.logic;
 public class Paddle {
     private int width;
     private int height;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int score;
     private int move;
-    private int speed;
+    private double speed;
 
     public Paddle(int canvasWidth, int canvasHeight, String side) {
         this.width = 18;
         this.height = 70;
-        this.x = side.equals("left") ? 150 : canvasWidth - 150;
-        this.y = (canvasHeight / 2) - 35;
+        this.x = side.equals("left") ? 150.0 : canvasWidth - 150;
+        this.y = (canvasHeight / 2.0) - 35.0;
         this.score = 0;
         this.move = 0;
         this.speed = 10;
@@ -35,15 +35,15 @@ public class Paddle {
         this.height = height;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
@@ -67,7 +67,7 @@ public class Paddle {
         this.move = move;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 

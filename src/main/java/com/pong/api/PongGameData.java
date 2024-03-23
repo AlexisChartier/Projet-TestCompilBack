@@ -1,22 +1,35 @@
 package com.pong.api;
-
-
+import com.pong.logic.Ball;
+import com.pong.logic.Paddle;
 public class PongGameData {
 
+    private static PongGameData instance;
+
+
+    private Paddle turn;
+    private long timer;
     private int playerScore;
     private int paddleScore;
     private boolean over;
     private boolean running;
     private int round;
 
-    public PongGameData(){}
+    private int canvasWidth;
+    private int canvasHeight;
 
-    public PongGameData(int playerScore, int paddleScore, boolean over, boolean running, int round) {
-        this.playerScore = playerScore;
-        this.paddleScore = paddleScore;
-        this.over = over;
-        this.running = running;
-        this.round = round;
+    private Paddle player;
+    private Paddle paddle;
+    private Ball ball;
+
+    private String color;
+
+    private PongGameData() {}
+
+    public static PongGameData getInstance() {
+        if (instance == null) {
+            instance = new PongGameData();
+        }
+        return instance;
     }
 
     public int getPlayerScore() {
@@ -57,5 +70,73 @@ public class PongGameData {
 
     public void setRound(int round) {
         this.round = round;
+    }
+
+    public int getCanvasWidth() {
+        return canvasWidth;
+    }
+
+    public void setCanvasWidth(int canvasWidth) {
+        this.canvasWidth = canvasWidth;
+    }
+
+    public int getCanvasHeight() {
+        return canvasHeight;
+    }
+
+    public void setCanvasHeight(int canvasHeight) {
+        this.canvasHeight = canvasHeight;
+    }
+
+    public Paddle getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Paddle player) {
+        this.player = player;
+    }
+
+    public Paddle getPaddle() {
+        return paddle;
+    }
+
+    public void setPaddle(Paddle paddle) {
+        this.paddle = paddle;
+    }
+
+    public Ball getBall() {
+        return ball;
+    }
+
+    public void setBall(Ball ball) {
+        this.ball = ball;
+    }
+
+    public Paddle getTurn() {
+        return turn;
+    }
+
+    public void setTurn(Paddle turn) {
+        this.turn = turn;
+    }
+
+    public long getTimer() {
+        return timer;
+    }
+
+    public void setTimer(long timer) {
+        this.timer = timer;
+    }
+
+    public void getTimer(long timer) {
+        this.timer = timer;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor() {
+        return color;
     }
 }

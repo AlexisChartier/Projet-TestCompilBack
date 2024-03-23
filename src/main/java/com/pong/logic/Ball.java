@@ -3,8 +3,8 @@ package com.pong.logic;
 public class Ball {
     private int width;
     private int height;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int moveX;
     private int moveY;
     private int speed;
@@ -12,8 +12,8 @@ public class Ball {
     public Ball(int canvasWidth, int canvasHeight, int incrementedSpeed) {
         this.width = 18;
         this.height = 18;
-        this.x = (canvasWidth / 2) - 9;
-        this.y = (canvasHeight / 2) - 9;
+        this.x = ((double) canvasWidth / 2) - 9;
+        this.y = ((double) canvasHeight / 2) - 9;
         this.moveX = 0;
         this.moveY = 0;
         this.speed = incrementedSpeed != 0 ? incrementedSpeed : 9;
@@ -36,15 +36,15 @@ public class Ball {
         this.height = height;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(double x) {
         this.x = x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

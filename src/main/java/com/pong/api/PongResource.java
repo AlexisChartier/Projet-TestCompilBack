@@ -1,32 +1,27 @@
 package com.pong.api;
 
 import com.pong.logic.PongLogic;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/pong")
 public class PongResource {
 
-    private final PongLogic gameLogic;
-
-    public PongResource() {
-        this.gameLogic = new PongLogic();
-    }
+    private PongGameData gameData;
 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/gameData")
     public PongGameData getGameData() {
-        PongGameData gameData = new PongGameData();
-        gameData.setPlayerScore(gameLogic.getPlayerScore());
-        gameData.setPaddleScore(gameLogic.getPaddleScore());
-        gameData.setOver(gameLogic.isOver());
-        gameData.setRunning(gameLogic.isRunning());
-        gameData.setRound(gameLogic.getRound());
-        // Ajoute d'autres données de jeu si nécessaire
+        gameData = PongGameData.getInstance();
         return gameData;
+    }
+
+    @POST
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateGame(PongGameData gameData) {
+        this.gameData = gameData;
     }
 }

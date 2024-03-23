@@ -1,8 +1,12 @@
 package com.pong.logic;
 
+import com.pong.api.PongGameData;
 import java.util.Random;
 
 public class PongLogic {
+
+    private static PongGameData gameData;
+
     private static final int IDLE = 0;
     private static final int UP = 1;
     private static final int DOWN = 2;
@@ -12,206 +16,91 @@ public class PongLogic {
     private static final int[] rounds = {5, 5, 3, 3, 2};
     private static final String[] colors = {"#1abc9c", "#2ecc71", "#3498db", "#e74c3c", "#9b59b6"};
 
-    private int canvasWidth = 1400;
-    private int canvasHeight = 1000;
+    private PongLogic() {}
 
-    private Paddle player;
-    private Paddle paddle;
-    private Ball ball;
-
-    private boolean running = false;
-    private boolean over = false;
-    private Paddle turn;
-    private int timer = 0;
-    private int round = 0;
-    private String color = "#2c3e50";
-
-    public PongLogic() {
-        initialize();
-    }
-
-    private void initialize() {
-        this.ball = new Ball(canvasWidth, canvasHeight,9);
-        this.player = new Paddle(canvasWidth, canvasHeight, "left");
-        this.paddle = new Paddle(canvasWidth, canvasHeight, "right");
-
-        paddle.setSpeed(8);
-
-        running = over = false;
-        turn = paddle;
-        timer = round = 0;
-        color = "#2c3e50";
+    public static void initialize(int canvasWidth, int canvasHeight) {
+        gameData = PongGameData.getInstance();
+        gameData.setCanvasWidth(canvasWidth);
+        gameData.setCanvasHeight(canvasHeight);
+        gameData.setPlayer(new Paddle(canvasWidth, canvasHeight, "left"));
+        gameData.setPaddle(new Paddle(canvasWidth, canvasHeight, "right"));
+        gameData.setBall(new Ball(canvasWidth, canvasHeight, 9));
+        gameData.setTurn(gameData.getPaddle());
+        gameData.setTimer(0);
+        gameData.setRound(0);
+        gameData.setColor("#2c3e50");
     }
 
     public void update() {
-        if (!over) {
-            if (ball.getX() <= 0) resetTurn(paddle, player);
-            if (ball.getX() >= canvasWidth - ball.getWidth()) resetTurn(player, paddle);
-            if (ball.getY() <= 0) ball.setMoveY(DOWN);
-            if (ball.getY() >= canvasHeight - ball.getHeight()) ball.setMoveY(UP);
+        if (!gameData.isOver()) {
+            if (gameData.getBall().getX() <= 0) resetTurn(gameData.getPaddle(), gameData.getPlayer());
+            if (gameData.getBall().getX() >= gameData.getCanvasWidth() - gameData.getBall().getWidth()) resetTurn(gameData.getPlayer(), gameData.getPaddle());
+            if (gameData.getBall().getY() <= 0) gameData.getBall().setMoveY(DOWN);
+            if (gameData.getBall().getY() >= gameData.getCanvasHeight() - gameData.getBall().getHeight()) gameData.getBall().setMoveY(UP);
 
-            if (player.getMove() == UP) player.setY(player.getY() - player.getSpeed());
-            else if (player.getMove() == DOWN) player.setY(player.getY() + player.getSpeed());
+            if (gameData.getPlayer().getMove() == UP) gameData.getPlayer().setY(gameData.getPlayer().getY() - gameData.getPlayer().getSpeed());
+            else if (gameData.getPlayer().getMove() == DOWN) gameData.getPlayer().setY(gameData.getPlayer().getY() + gameData.getPlayer().getSpeed());
 
-            if (turn != null && turn != player && turn != paddle && turnDelayIsOver()) {
-                ball.setMoveX(turn == player ? LEFT : RIGHT);
-                ball.setMoveY(new Random().nextBoolean() ? UP : DOWN);
-                ball.setY(new Random().nextInt(canvasHeight - 200) + 200);
-                turn = null;
+            if (gameData.getTurn() != null && gameData.getTurn() != gameData.getPlayer() && gameData.getTurn() != gameData.getPaddle() && turnDelayIsOver()) {
+                gameData.getBall().setMoveX(gameData.getTurn() == gameData.getPlayer() ? LEFT : RIGHT);
+                gameData.getBall().setMoveY(new Random().nextBoolean() ? UP : DOWN);
+                gameData.getBall().setY(new Random().nextInt(gameData.getCanvasHeight() - 200) + 200);
+                gameData.setTurn(null);
             }
 
-            if (player.getY() <= 0) player.setY(0);
-            else if (player.getY() >= canvasHeight - player.getHeight()) player.setY(canvasHeight - player.getHeight());
+            if (gameData.getPlayer().getY() <= 0) gameData.getPlayer().setY(0);
+            else if (gameData.getPlayer().getY() >= gameData.getCanvasHeight() - gameData.getPlayer().getHeight()) gameData.getPlayer().setY(gameData.getCanvasHeight() - gameData.getPlayer().getHeight());
 
-            if (ball.getMoveY() == UP) ball.setY(ball.getY() - (ball.getSpeed() / 1.5));
-            else if (ball.getMoveY() == DOWN) ball.setY(ball.getY() + (ball.getSpeed() / 1.5));
-            if (ball.getMoveX() == LEFT) ball.setX(ball.getX() - ball.getSpeed());
-            else if (ball.getMoveX() == RIGHT) ball.setX(ball.getX() + ball.getSpeed());
+            if (gameData.getBall().getMoveY() == UP) gameData.getBall().setY(gameData.getBall().getY() - (gameData.getBall().getSpeed() / 1.5));
+            else if (gameData.getBall().getMoveY() == DOWN) gameData.getBall().setY(gameData.getBall().getY() + (gameData.getBall().getSpeed() / 1.5));
+            if (gameData.getBall().getMoveX() == LEFT) gameData.getBall().setX(gameData.getBall().getX() - gameData.getBall().getSpeed());
+            else if (gameData.getBall().getMoveX() == RIGHT) gameData.getBall().setX(gameData.getBall().getX() + gameData.getBall().getSpeed());
 
-            if (paddle.getY() > ball.getY() - ((double) paddle.getHeight() / 2)) {
-                if (ball.getMoveX() == RIGHT) paddle.setY(paddle.getY() - (paddle.getSpeed() / 1.5));
-                else paddle.setY(paddle.getY() - ((double) paddle.getSpeed() / 4));
+            if (gameData.getPaddle().getY() > gameData.getBall().getY() - ((double) gameData.getPaddle().getHeight() / 2)) {
+                if (gameData.getBall().getMoveX() == RIGHT) gameData.getPaddle().setY(gameData.getPaddle().getY() - (gameData.getPaddle().getSpeed() / 1.5));
+                else gameData.getPaddle().setY(gameData.getPaddle().getY() - ((double) gameData.getPaddle().getSpeed() / 4));
             }
-            if (paddle.getY() < ball.getY() - ((double) paddle.getHeight() / 2)) {
-                if (ball.getMoveX() == RIGHT) paddle.setY(paddle.getY() + (paddle.getSpeed() / 1.5));
-                else paddle.setY(paddle.getY() + ((double) paddle.getSpeed() / 4));
+            if (gameData.getPaddle().getY() < gameData.getBall().getY() - ((double) gameData.getPaddle().getHeight() / 2)) {
+                if (gameData.getBall().getMoveX() == RIGHT) gameData.getPaddle().setY(gameData.getPaddle().getY() + (gameData.getPaddle().getSpeed() / 1.5));
+                else gameData.getPaddle().setY(gameData.getPaddle().getY() + ((double) gameData.getPaddle().getSpeed() / 4));
             }
 
-            if (paddle.getY() >= canvasHeight - paddle.getHeight()) paddle.setY(canvasHeight - paddle.getHeight());
-            else if (paddle.getY() <= 0) paddle.setY(0);
+            if (gameData.getPaddle().getY() >= gameData.getCanvasHeight() - gameData.getPaddle().getHeight()) gameData.getPaddle().setY(gameData.getCanvasHeight() - gameData.getPaddle().getHeight());
+            else if (gameData.getPaddle().getY() <= 0) gameData.getPaddle().setY(0);
         }
 
-        if (player.getScore() == rounds[round]) {
-            if (rounds[round + 1] == 0) {
-                over = true;
+        if (gameData.getPlayer().getScore() == rounds[gameData.getRound()]) {
+            if (rounds[gameData.getRound() + 1] == 0) {
+                gameData.setOver(true);
             } else {
-                color = generateRoundColor();
-                player.setScore(0);
-                paddle.setScore(0);
-                player.setSpeed(player.getSpeed() + 0.5);
-                paddle.setSpeed(paddle.getSpeed() + 1);
-                ball.setSpeed(ball.getSpeed() + 1);
-                round++;
+                gameData.setColor(generateRoundColor());
+                gameData.getPlayer().setScore(0);
+                gameData.getPaddle().setScore(0);
+                gameData.getPlayer().setSpeed(gameData.getPlayer().getSpeed() + 0.5);
+                gameData.getPaddle().setSpeed(gameData.getPaddle().getSpeed() + 1);
+                gameData.getBall().setSpeed(gameData.getBall().getSpeed() + 1);
+                gameData.setRound(gameData.getRound()+1);
             }
-        } else if (paddle.getScore() == rounds[round]) {
-            over = true;
+        } else if (gameData.getPaddle().getScore() == rounds[gameData.getRound()]) {
+            gameData.setOver(true);
         }
     }
 
     private void resetTurn(Paddle victor, Paddle loser) {
-        ball = new Ball(0,0,ball.getSpeed());
-        turn = loser;
-        timer = (int) System.currentTimeMillis();
+        gameData.setBall(new Ball(0,0,gameData.getBall().getSpeed()));
+        gameData.setTurn(loser);
+        gameData.setTimer((int) System.currentTimeMillis());
 
         victor.setScore(victor.getScore() + 1);
     }
 
     private boolean turnDelayIsOver() {
-        return (System.currentTimeMillis() - timer >= 1000);
+        return (System.currentTimeMillis() - gameData.getTimer() >= 1000);
     }
 
     private String generateRoundColor() {
         String newColor = colors[new Random().nextInt(colors.length)];
-        if (newColor.equals(color)) return generateRoundColor();
+        if (newColor.equals(gameData.getColor())) return generateRoundColor();
         return newColor;
     }
-
-    public int getCanvasWidth() {
-        return canvasWidth;
-    }
-
-    public void setCanvasWidth(int canvasWidth) {
-        this.canvasWidth = canvasWidth;
-    }
-
-    public int getCanvasHeight() {
-        return canvasHeight;
-    }
-
-    public void setCanvasHeight(int canvasHeight) {
-        this.canvasHeight = canvasHeight;
-    }
-
-    public Paddle getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Paddle player) {
-        this.player = player;
-    }
-
-    public Paddle getPaddle() {
-        return paddle;
-    }
-
-    public void setPaddle(Paddle paddle) {
-        this.paddle = paddle;
-    }
-
-    public Ball getBall() {
-        return ball;
-    }
-
-    public void setBall(Ball ball) {
-        this.ball = ball;
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
-
-    public boolean isOver() {
-        return over;
-    }
-
-    public void setOver(boolean over) {
-        this.over = over;
-    }
-
-    public Paddle getTurn() {
-        return turn;
-    }
-
-    public void setTurn(Paddle turn) {
-        this.turn = turn;
-    }
-
-    public int getTimer() {
-        return timer;
-    }
-
-    public void setTimer(int timer) {
-        this.timer = timer;
-    }
-
-    public int getRound() {
-        return round;
-    }
-
-    public void setRound(int round) {
-        this.round = round;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public int getPlayerScore() {
-        return player.getScore();
-    }
-
-    public int getPaddleScore() {
-        return paddle.getScore();
-    }
-
-
-    // Getters and setters for canvasWidth, canvasHeight, player, paddle, ball, running, over, turn, timer, round, color
 }
