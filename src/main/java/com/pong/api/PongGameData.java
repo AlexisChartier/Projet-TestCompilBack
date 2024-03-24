@@ -7,6 +7,7 @@ public class PongGameData {
     private static PongGameData instance;
 
 
+    private static final int[] rounds = {5, 5, 3, 3, 2};
     private Paddle turn;
     private long timer;
     private int playerScore;
