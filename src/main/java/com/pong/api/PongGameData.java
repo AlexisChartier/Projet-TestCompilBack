@@ -1,4 +1,5 @@
 package com.pong.api;
+import com.google.gson.Gson;
 import com.pong.logic.Ball;
 import com.pong.logic.Paddle;
 public class PongGameData {
@@ -138,5 +139,10 @@ public class PongGameData {
 
     public String getColor() {
         return color;
+    }
+
+    public String toJSON(){
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }
