@@ -15,23 +15,25 @@ public class PongSocket {
 
     private PongGameData gameData;
 
+    private PongLogic pongLogic;
+
     @OnOpen
     public void onOpen(Session session) {
+        pongLogic = PongLogic.getInstance();
         gameData = PongGameData.getInstance();
-        PongLogic.initialize(700,500);
+        pongLogic.initialize(1400,1000);
         sendGameData(session);
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
+        //System.out.println("Message: " + message);
         if (message != null && !message.isEmpty()) {
             try {
-                // Analyser le message JSON
-                JsonObject json = new Gson().fromJson(message, JsonObject.class);
-                if (json.has("direction")) {
-                    int direction = json.get("direction").getAsInt();
-                    gameData.getPlayer().setMove(direction);
-                }
+                int direction = Integer.parseInt(message);
+                gameData.getPlayer().setMove(direction);
+                pongLogic.update();
+                sendGameData(session);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -50,6 +52,18 @@ public class PongSocket {
 
 
     private void sendGameData(Session session) {
-        session.getAsyncRemote().sendText(gameData.toJSON());
+        session.getAsyncRemote().sendObject(gameData.toJSON());
+    }
+
+    public PongLogic getPongLogic() {
+        return pongLogic;
+    }
+
+    public PongGameData getGameData() {
+        return gameData;
+    }
+
+    public void setPongLogic(PongLogic pongLogic) {
+        this.pongLogic = pongLogic;
     }
 }
