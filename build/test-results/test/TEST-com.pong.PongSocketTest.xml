@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.pong.PongSocketTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-03-25T12:26:34" hostname="DESKTOP-U0FVR90" time="1.03">
+  <properties/>
+  <testcase name="testOnClose()" classname="com.pong.PongSocketTest" time="0.938"/>
+  <testcase name="testOnError()" classname="com.pong.PongSocketTest" time="0.078"/>
+  <testcase name="testOnMessage()" classname="com.pong.PongSocketTest" time="0.006"/>
+  <testcase name="testOnOpen()" classname="com.pong.PongSocketTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

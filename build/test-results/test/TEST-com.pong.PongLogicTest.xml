@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.pong.PongLogicTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-03-25T12:26:34" hostname="DESKTOP-U0FVR90" time="0.026">
+  <properties/>
+  <testcase name="testUpdate_BallHitsWall_Left()" classname="com.pong.PongLogicTest" time="0.02"/>
+  <testcase name="testUpdate_PlayerMovement()" classname="com.pong.PongLogicTest" time="0.001"/>
+  <testcase name="testUpdate_BallHitsWall_Right()" classname="com.pong.PongLogicTest" time="0.001"/>
+  <testcase name="testUpdate_AIPlayerMovement()" classname="com.pong.PongLogicTest" time="0.001"/>
+  <testcase name="testInitialize()" classname="com.pong.PongLogicTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
